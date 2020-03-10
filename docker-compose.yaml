@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+  monerod:
+    ports:
+      - 18080:18080
+    build:
+      context: ./monero
+      dockerfile: ./Dockerfile
+      args:
+        NPROC: 4
+    volumes:
+      - ./data/blockchain:/root/.bitmonero
+      - ./data/wallet:/wallet
