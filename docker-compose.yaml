@@ -5,10 +5,24 @@ services:
     ports:
       - 18080:18080
     build:
-      context: ./monero
-      dockerfile: ./Dockerfile
+      context: ../monero
+      dockerfile: Dockerfile
       args:
         NPROC: 4
+    restart: always
     volumes:
-      - ./data/blockchain:/root/.bitmonero
-      - ./data/wallet:/wallet
+      - ./data/blockchain:/home/monero/.bitmonero
+    entrypoint:
+      - monerod
+      - --p2p-bind-ip=0.0.0.0
+      - --p2p-bind-port=18080
+      - --rpc-bind-ip=0.0.0.0
+      - --rpc-bind-port=18081
+      - --non-interactive
+      - --confirm-external-bind
+      - --tx-proxy=torsocks:9050
+  torsocks:
+    build:
+      context: ./torsocks
+      dockerfile: Dockerfile
+    restart: always
